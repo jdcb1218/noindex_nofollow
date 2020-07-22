@@ -1,0 +1,10 @@
+name = Noindex Nofollow
+description = Config pages Noindex Nofollow
+files[] = noindex_nofollow.module
+configure = admin/config/system/noindex_nofollow
+package = CDI
+dependencies[] = entity
+version = "7.x-1.4"
+core = "7.x"
+project = "noindex_nofollow"
+datestamp = "1470638340"

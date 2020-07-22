@@ -1,0 +1,85 @@
+<?php
+include_once 'includes/config.inc';
+
+/**
+ * @file
+ * Custom Module // Created
+ * @author Juan David Ceballos.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+
+function noindex_nofollow_menu() {
+  $items = array();
+  $items['admin/config/system/noindex_nofollow'] = array(
+    'title' => t('Noindex nofollow'),
+    'description' => t('List of pages Noindex Nofollow'),
+    'position' => 'left',
+    'weight' => -15,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('noindex_nofollow_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'includes/config.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_help().
+ */
+function noindex_nofollow_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#noindex_nofollow':
+      return '<p>' . t('Este modulo se encarga de no indexar las paginas registradas en el formulario de configuración', array('storage' => 'Noindex Nofollow' )) . '</p>';
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function noindex_nofollow_permission() {
+  return array(
+    'administer noindex_nofollow' =>  array(
+      'title' => t('Administer noindex_nofollow'),
+      'description' => t('Perform administration noindex_nofollow'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_init().
+ */
+function noindex_nofollow_init() {
+    $arg = explode(";", variable_get('urls'));
+  
+     foreach ($arg as $key => $value) {
+      $value = trim($value);
+
+      if ($value == current_path()) {
+          noindex_nofflow_add();
+      }else {
+        if (arg(0) == 'node' && $value == 'node/*') {
+          noindex_nofflow_add();
+        }
+      }
+    }
+}
+
+
+/**
+ * Implements Function noindex_nofflow_add().
+ */
+
+function noindex_nofflow_add(){
+   $meta = array(
+      '#type' => 'html_tag',
+      '#tag' => 'meta',
+      '#attributes' => array(
+       'name' => 'robots',
+       'content' => 'noindex, nofollow',
+      )
+    );
+    drupal_add_html_head($meta, 'robots_noindex');  
+}
